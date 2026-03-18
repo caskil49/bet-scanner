@@ -384,8 +384,8 @@ body {
 <script>
 var SPORT_KEYS = ['basketball_ncaab','basketball_nba','baseball_mlb','icehockey_nhl'];
 var SPORT_LABELS = { basketball_ncaab:'NCAAB', basketball_nba:'NBA', baseball_mlb:'MLB', icehockey_nhl:'NHL' };
-var BOOKS = ['fanduel','draftkings','betmgm','williamhill_us'];
-var BOOK_LABELS = { fanduel:'FD', draftkings:'DK', betmgm:'MGM', williamhill_us:'CZS' };
+var BOOKS = ['fanduel','draftkings','betmgm','caesars'];
+var BOOK_LABELS = { fanduel:'FD', draftkings:'DK', betmgm:'MGM', caesars:'CZS' };
 
 var liveOdds = [];
 var activeSport = 'all';
@@ -416,8 +416,9 @@ function fetchSportOdds(sportKey) {
   return fetch('/api/odds?sport=' + sportKey)
     .then(r => r.json())
     .then(res => {
-      var games = res.data || res;
-      if (!Array.isArray(games)) return [];
+      var games = Array.isArray(res) ? res : (Array.isArray(res.data) ? res.data : []);
+      console.log('Sport:', sportKey, 'Games:', games.length);
+      if (!games.length) return [];
       return games.map(game => {
         var bookData = {};
         BOOKS.forEach(bk => {
@@ -454,7 +455,7 @@ function fetchSportOdds(sportKey) {
           time: timeStr, commenceTime: game.commence_time,
           books: bookData, spreadVal: spreadVal, isLargeSpread: spreadVal >= 10
         };
-      }).filter(g => Object.values(g.books).some(b => b !== null));
+      });
     });
 }
 
