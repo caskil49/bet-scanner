@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -413,7 +414,7 @@ function setStatus(state, msg) {
 }
 
 function fetchSportOdds(sportKey) {
-  return fetch('/api/odds?sport=' + sportKey)
+  return fetch('/.netlify/functions/odds?sport=' + sportKey)
     .then(r => r.json())
     .then(res => {
       var games = Array.isArray(res) ? res : (Array.isArray(res.data) ? res.data : []);
@@ -571,7 +572,7 @@ function analyzeGame(gameId) {
   var totalStr = fd && fd.total ? 'O/U ' + fd.total.line : 'N/A';
   var mlStr = fd && fd.ml ? game.away + ' ' + (fd.ml.awayPrice > 0?'+':'') + fd.ml.awayPrice : 'N/A';
 
-  fetch('/api/analyze', {
+  fetch('/.netlify/functions/analyze', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
